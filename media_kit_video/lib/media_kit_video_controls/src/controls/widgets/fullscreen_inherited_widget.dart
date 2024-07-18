@@ -68,7 +68,11 @@ class _FullscreenInheritedWidgetPopScopeState
         // Make sure to exit native fullscreen when this route is popped from the navigator.
         await onExitFullscreen(context)?.call();
         // ignore: use_build_context_synchronously
-        Navigator.of(context).pop();
+        if (!isFullscreen(context)) {
+          if (context.mounted) {
+            await Navigator.of(context).maybePop();
+          }
+        }
         return true;
       },
       child: widget.child,
